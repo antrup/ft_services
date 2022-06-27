@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-all
+data:
+  mysql_server: mysql
+  influxdb_server: influxdb
+  PMA_DB_USER: pma
+  WP_DB_USER: wordpress_user
+  FTP_USER: ftpuser
+  INF_DB_USER: infadmin
+  INF_DB_ORG: "42"
+  INF_DB_RETENTION: 1w
+  INF_DB_BASE: monitoring
+

@@ -1,0 +1,5 @@
+open ftpuser:secret@ftps
+set net:timeout 5
+set net:max-retries 2
+set ssl:verify-certificate no
+ls

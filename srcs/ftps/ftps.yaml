@@ -1,0 +1,70 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ftps-deployment
+  labels:
+    app: ftps
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ftps
+  template:
+    metadata:
+      labels:
+        app: ftps
+    spec:
+      containers:
+        - name: ftps
+          image: ftps-image
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 20
+              name: data
+            - containerPort: 21
+              name: listen
+            - containerPort: 42420
+              name: pasv1
+            - containerPort: 42421
+              name: pasv2
+            - containerPort: 42422
+              name: pasv3
+          env:
+            - name: FTP_PSSWORD
+              valueFrom:
+                secretKeyRef:
+                        name: password-secret
+                        key: FTP_PSSWORD
+            - name: FTP_USER
+              valueFrom:
+                configMapKeyRef:
+                        name: config-all
+                        key: FTP_USER
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ftps
+  annotations:
+    metallb.universe.tf/allow-shared-ip: one
+spec:
+  selector:
+    app: ftps
+  ports:
+    - name: data
+      port: 20
+      targetPort: 20
+    - name: listen
+      port: 21
+      targetPort: 21
+    - name: pasv1
+      port: 42420
+      targetPort: 42420
+    - name: pasv2
+      port: 42421
+      targetPort: 42421
+    - name: pasv3
+      port: 42422
+      targetPort: 42422
+  type: LoadBalancer
